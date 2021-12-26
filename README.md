@@ -2,7 +2,7 @@
 A simple view that animates the border using a fill animation
 
 <!-- ![Simple Demo](demo/demo.gif) -->
-<img src="demo/demo.gif" width="250">
+<img src="demo/demo.gif" width="320">
 
 ## Installation
 
@@ -20,6 +20,13 @@ import AnimatedBorder from "react-native-animated-border";
 const result = await AnimatedBorder.multiply(3, 7);
 ```
 
+## TODO
+
+[ ] Implements new fill animations
+    [X] Double fill start from middle bottom
+    [ ] One way fill
+    [ ] Choose a corner to start fill
+    
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
