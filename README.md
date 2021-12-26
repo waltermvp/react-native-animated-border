@@ -2,6 +2,7 @@
 A simple view that animates the border using a fill animation
 
 ![Simple Demo](demo/demo.gif)
+<img src="demo/demo.gif" width="48">
 
 ## Installation
 
