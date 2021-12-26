@@ -1,0 +1,22 @@
+{
+  "name": "react-native-animated-border-example",
+  "displayName": "AnimatedBorder Example",
+  "expo": {
+    "name": "react-native-animated-border-example",
+    "slug": "react-native-animated-border-example",
+    "description": "Example app for react-native-animated-border",
+    "privacy": "public",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
