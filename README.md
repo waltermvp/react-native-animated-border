@@ -13,16 +13,22 @@ npm install react-native-animated-border
 ## Usage
 
 ```js
-import AnimatedBorder from "react-native-animated-border";
+import AnimatedBorderView from "react-native-animated-border";
 
 // ...
 
-const result = await AnimatedBorder.multiply(3, 7);
+      <AnimatedBorderView
+        startAnimation={ready}
+        style={styles.box}
+        children={
+          <Text style={{ textAlign: 'center', margin: 10 }}>Testing </Text>
+        }
+      ></AnimatedBorderView>
 ```
 
 ## TODO
 
-[ ] Implements new fill animations
+* [ ] Implements new fill animations
     [X] Double fill start from middle bottom
     [ ] One way fill
     [ ] Choose a corner to start fill
