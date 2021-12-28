@@ -1,28 +1,30 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+import { NativeBaseProvider, Button } from 'native-base';
 import { AnimatedBorderView } from 'react-native-animated-border';
 
 export default function App() {
   // const [result, setResult] = React.useState<number | undefined>();
   const [ready, setReady] = useState(false);
-
   return (
-    <View style={styles.container}>
-      <AnimatedBorderView
-        startAnimation={ready}
-        style={styles.box}
-        children={
-          <Text style={{ textAlign: 'center', margin: 10 }}>Testing </Text>
-        }
-      ></AnimatedBorderView>
+    <NativeBaseProvider>
+      <View style={styles.container}>
+        <AnimatedBorderView
+          startAnimation={ready}
+          style={styles.box}
+          children={
+            <Text style={{ textAlign: 'center', margin: 10 }}>Testing </Text>
+          }
+          animationComplete={() => {
+            console.log('did complete');
+          }}
+        ></AnimatedBorderView>
 
-      <Button
-        title="Animate"
-        onPress={() => {
-          setReady(true);
-        }}
-      ></Button>
-    </View>
+        <Button variant={'solid'} onPress={() => setReady(!ready)}>
+          {ready ? 'Undo' : 'Animate'}
+        </Button>
+      </View>
+    </NativeBaseProvider>
   );
 }
 

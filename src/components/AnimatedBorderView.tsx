@@ -15,20 +15,22 @@ import Animated, {
 // Enable playback in silence mode
 // Sound.setCategory('Playback');
 
-const FILLCOLOR = 'green'; //color.palette.green
-const ANIMATION_WIDTH = 2;
-const ANIMATION_DURATION = 1500;
 // const CONTAINER: ViewStyle = { flex: 1 };
 
 export interface AnimatedBorderViewProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
+  /*
+  Setting to true will start the animation, setting to false will interrupt and undo (reverse) the animation.
+  */
   startAnimation: Boolean;
-  color?: string;
-  // onPressThumb: (thumbIndex: Number) => void;
+  color?: string; // default green
+  animationWidth?: number; // default 2
+  animationDuration?: number; // default 1500
+  /*
+  Called when animation completes, will be called after an undo animation as well
+  */
+  animationComplete?: () => void;
 }
 
 /**
@@ -37,7 +39,15 @@ export interface AnimatedBorderViewProps {
 export const AnimatedBorderView = function AnimatedBorderView(
   props: AnimatedBorderViewProps
 ) {
-  const { style = [], startAnimation, children } = props;
+  const {
+    style = [],
+    startAnimation,
+    children,
+    color = 'green',
+    animationWidth = 2,
+    animationDuration = 1500,
+    animationComplete,
+  } = props;
   const styles = style; // flatten([CONTAINER, style]);
 
   const offset = useSharedValue(0);
@@ -49,59 +59,61 @@ export const AnimatedBorderView = function AnimatedBorderView(
 
   const topLeftAnimatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: FILLCOLOR,
+      backgroundColor: color,
       width: topWidthHeight.value,
-      height: ANIMATION_WIDTH,
+      height: animationWidth,
     };
   });
   const topAnimatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: FILLCOLOR,
+      backgroundColor: color,
       width: topWidthHeight.value,
-      height: ANIMATION_WIDTH,
+      height: animationWidth,
     };
   });
   const bottomAnimatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: FILLCOLOR,
-      height: ANIMATION_WIDTH,
+      backgroundColor: color,
+      height: animationWidth,
       width: offset.value,
     };
   });
   const leftAnimatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: FILLCOLOR,
-      width: ANIMATION_WIDTH,
+      backgroundColor: color,
+      width: animationWidth,
       height: offsetHeight.value,
     };
   });
   const rightAnimatedStyles = useAnimatedStyle(() => {
     return {
-      backgroundColor: FILLCOLOR,
-      width: ANIMATION_WIDTH,
+      backgroundColor: color,
+      width: animationWidth,
       height: offsetHeight.value,
     };
   });
 
   const wrapper = () => {
+    if (animationComplete) {
+      animationComplete();
+    }
     // Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    playSound();
   };
 
   const startAnimations = () => {
     offset.value = withTiming(
       fullWidth,
-      { duration: ANIMATION_DURATION * 0.4, easing: Easing.ease },
+      { duration: animationDuration * 0.4, easing: Easing.ease },
       (finishedWidth: boolean | undefined) => {
         if (finishedWidth) {
           offsetHeight.value = withTiming(
             fullHeight,
-            { duration: ANIMATION_DURATION * 0.1, easing: Easing.ease },
+            { duration: animationDuration * 0.1, easing: Easing.ease },
             (finishedHeight: boolean | undefined) => {
               if (finishedHeight) {
                 topWidthHeight.value = withTiming(
                   fullWidth / 2,
-                  { duration: ANIMATION_DURATION * 0.4, easing: Easing.ease },
+                  { duration: animationDuration * 0.4, easing: Easing.ease },
                   (finishedFinal: boolean | undefined) => {
                     runOnJS(wrapper)();
 
@@ -116,35 +128,42 @@ export const AnimatedBorderView = function AnimatedBorderView(
     );
   };
   const undoAnimations = () => {
-    offset.value = 0;
-    offsetHeight.value = 0;
-    topWidthHeight.value = 0;
+    topWidthHeight.value = withTiming(
+      0,
+      { duration: animationDuration * 0.4, easing: Easing.ease },
+      (finishedFirst: boolean | undefined) => {
+        if (finishedFirst) {
+          offsetHeight.value = withTiming(
+            0,
+            { duration: animationDuration * 0.1, easing: Easing.ease },
+            (finishedFinal: boolean | undefined) => {
+              if (finishedFinal) {
+                offset.value = withTiming(
+                  0,
+                  { duration: animationDuration * 0.4, easing: Easing.ease },
+                  (finishedWidth: boolean | undefined) => {
+                    if (finishedWidth) {
+                      runOnJS(wrapper)();
+
+                      console.log('undo finished', finishedFinal);
+                    }
+                  }
+                );
+              }
+            }
+          );
+        }
+      }
+    );
+
+    // offset.value = 0;
+    // offsetHeight.value = 0;
+    // topWidthHeight.value = 0;
   };
-  function playSound() {
-    // var whoosh = new Sound(
-    //   'completetask.mp3',
-    //   Sound.MAIN_BUNDLE,
-    //   (error: any) => {
-    //     if (error) {
-    //       console.warn('failed to load the sound', error);
-    //       return;
-    //     }
-    //     // Play the sound with an onEnd callback
-    //     whoosh.play((success: boolean) => {
-    //       if (success) {
-    //         console.warn('successfully finished playing');
-    //       } else {
-    //         console.warn('playback failed due to audio decoding errors');
-    //       }
-    //     });
-    //   }
-    // );
-  }
 
   useEffect(() => {
     if (startAnimation) {
       startAnimations();
-      console.log('is completed', startAnimation);
     } else {
       undoAnimations();
     }
@@ -203,7 +222,7 @@ export const AnimatedBorderView = function AnimatedBorderView(
           >
             {children}
           </ScrollView>
-          <Animated.View style={[rightAnimatedStyles]} />
+          <Animated.View style={rightAnimatedStyles} />
         </View>
         <Animated.View style={[bottomAnimatedStyles]} />
       </View>
