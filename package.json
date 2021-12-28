@@ -1,7 +1,7 @@
 {
   "name": "react-native-animated-border",
   "version": "0.1.0",
-  "description": "A simple view that animates the border using a fill animation",
+  "description": "A simple view that animates the border using a fill animation. Built with reanimated 2.3.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",

@@ -1,5 +1,5 @@
 # react-native-animated-border
-A simple view that animates the border using a fill animation
+A simple view that animates the border using a fill animation. Built with reanimated 2.3.
 
 <!-- ![Simple Demo](demo/demo.gif) -->
 <img src="demo/demo.gif" width="320">
