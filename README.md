@@ -4,6 +4,24 @@ A simple view that animates the border using a fill animation
 <!-- ![Simple Demo](demo/demo.gif) -->
 <img src="demo/demo.gif" width="320">
 
+## Aniamtion Options
+* Double fill start from bottom center finish top center
+
+
+## Props
+
+```js
+export interface AnimatedBorderViewProps {
+  style?: StyleProp<ViewStyle>;
+  children: React.ReactNode;
+  startAnimation: Boolean;
+  color?: string; // default green
+  animationWidth?: number; // default 2
+  animationDuration?: number; // default 1500
+}
+```
+
+
 ## Installation
 
 ```sh
@@ -28,10 +46,11 @@ import AnimatedBorderView from "react-native-animated-border";
 
 ## TODO
 
+* [X] Undo Functionality
 * [ ] Implements new fill animations
-    [X] Double fill start from middle bottom
-    [ ] One way fill
-    [ ] Choose a corner to start fill
+    * [X] Double fill start from middle bottom
+    * [ ] One way fill
+    * [ ] Choose a corner to start fill
     
 ## Contributing
 
